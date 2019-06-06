@@ -1,16 +1,8 @@
-# arks_ui
+# PSO2es Tweaker UI
 
-A new Flutter project.
+Just practicing flutter by making the UI for the PSO2es Tweaker.  The current version only has the bare minimums for the UI.  This tries to make the UI for the mobile app look closer to the PSO2 Tweaker for PC.  You can find out about the PSO2 Tweaker here: http://arks-layer.com/
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+# Flutter Packages
+I'm using the Carousal Slider and AudioPlayers packages.  Here are their respective pub pages.
+https://pub.flutter-io.cn/packages/carousel_slider
+https://pub.dev/packages/audioplayers
