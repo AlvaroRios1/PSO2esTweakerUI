@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -57,10 +58,22 @@ class _MainPageState extends State<MainPage> {
           children: <Widget>[
             BGM(),
             Container(
-              height: MediaQuery.of(context).size.height / 12,
+              height: MediaQuery.of(context).size.height / 35
             ),
             Container(
-              height: MediaQuery.of(context).size.height / 3,
+              height: MediaQuery.of(context).size.height / 12,
+              child: padThis(
+                  Row(children: <Widget>[
+                    Image.asset("assets/images/logo.png"),
+                    whiteThis('PSO2es Tweaker'),
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  )
+
+                ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height / 3.3,
               foregroundDecoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("assets/images/banner.png"),
@@ -72,11 +85,27 @@ class _MainPageState extends State<MainPage> {
               )
             ),
             Container(
-              height: MediaQuery.of(context).size.height / 2.9,
+              height: MediaQuery.of(context).size.height / 2.6,
               width: MediaQuery.of(context).size.width / 1.05,
               child: Column(children: <Widget>[
-                padThis(whiteThis('Game Version: N/A')),
-                padThis(whiteThis('English Patch Version: N/A')),
+                padThis(
+                  Row(children: <Widget>[
+                    whiteThis('Game Version: '),
+                    CircularProgressIndicator()
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  )
+
+                ),
+                padThis(
+                  Row(children: <Widget>[
+                    whiteThis('English Patch Version: '),
+                    CircularProgressIndicator()
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  )
+
+                ),
                 padThis(Divider(color: Colors.white,)),
                 padThis(patch),
                 padThis(update),
@@ -111,22 +140,45 @@ class BGM extends StatefulWidget {
   _BGMState createState() => _BGMState();
 }
 
-class _BGMState extends State<BGM> {
+class _BGMState extends State<BGM> with WidgetsBindingObserver{
   AudioCache audioPlayer;
+  AudioPlayer player;
   @override
-  void initState() {
+  void initState(){
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     audioPlayer = AudioCache(prefix: 'audio/');
-    audioPlayer.load('crossing.mp3').whenComplete((){
-      audioPlayer.loop('crossing.mp3');
+    audioPlayer.load('crossing.mp3').whenComplete(() async {
+      player = await audioPlayer.loop('crossing.mp3');
     });
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     audioPlayer.clearCache();
     audioPlayer = null;
+    player = null;
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state){
+    super.didChangeAppLifecycleState(state);
+    switch(state){
+      case AppLifecycleState.inactive:
+        player.pause();
+        break;
+      case AppLifecycleState.resumed:
+        player.resume();
+        break;
+      case AppLifecycleState.suspending:
+        player.pause();
+        break;
+      case AppLifecycleState.paused:
+        player.pause();
+        break;
+    }
   }
 
   @override
