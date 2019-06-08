@@ -62,11 +62,12 @@ flutter:
     - assets/images/tab.png
     - assets/images/form.png
     - assets/images/banner.png
-    - assets/images/info1.png
-    - assets/images/info2.png
-    - assets/images/info3.png
-    - assets/images/info4.png
-    - assets/images/info5.png
+    - assets/images/discord2.png
+    - assets/images/donations2.png
+    - assets/images/github2.png
+    - assets/images/PSO2es2.png
+    - assets/images/skillsim.png
+    - assets/images/visiphone.png
     - assets/audio/crossing.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see

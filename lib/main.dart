@@ -1,7 +1,8 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audio_cache.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+
+import 'package:arks_ui/arks_button.dart';
+import 'package:arks_ui/bgm_module.dart';
+import 'package:arks_ui/banner_module.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
       ),
       home: MainPage(title: 'PSO2es Tweaker'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -135,142 +137,3 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-class BGM extends StatefulWidget {
-  @override
-  _BGMState createState() => _BGMState();
-}
-
-class _BGMState extends State<BGM> with WidgetsBindingObserver{
-  AudioCache audioPlayer;
-  AudioPlayer player;
-  @override
-  void initState(){
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    audioPlayer = AudioCache(prefix: 'audio/');
-    audioPlayer.load('crossing.mp3').whenComplete(() async {
-      player = await audioPlayer.loop('crossing.mp3');
-    });
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    audioPlayer.clearCache();
-    audioPlayer = null;
-    player = null;
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state){
-    super.didChangeAppLifecycleState(state);
-    switch(state){
-      case AppLifecycleState.inactive:
-        player.pause();
-        break;
-      case AppLifecycleState.resumed:
-        player.resume();
-        break;
-      case AppLifecycleState.suspending:
-        player.pause();
-        break;
-      case AppLifecycleState.paused:
-        player.pause();
-        break;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-//(WIP) include parameter for function to perform tasks (update client, patch client, start game)
-class ArksButton extends StatefulWidget {
-  ArksButton({@required this.buttonText, @required this.size, @required this.fontSize});
-  final String buttonText;
-  final double fontSize;
-  final double size;
-  @override
-  _ArksButtonState createState() => _ArksButtonState(buttonText: buttonText, size: size, fontSize: fontSize);
-}
-
-class _ArksButtonState extends State<ArksButton> {
-  _ArksButtonState({@required this.buttonText, @required this.size, @required this.fontSize});
-  final String buttonText;
-  final double size;
-  final double fontSize;
-  final String notPress = "assets/images/button_normal.png";
-  final String isPress = "assets/images/button_press.png";
-  bool doChange = false;
-
-  @override
-  Widget build(BuildContext context) {
-
-    return FlatButton(
-      child: Stack(
-        children: <Widget>[
-          Image.asset(doChange ? isPress : notPress,
-            width: size,
-            fit: BoxFit.fitHeight
-          ),
-          Text('$buttonText', style: TextStyle(color: Colors.white, fontSize: fontSize))
-        ],
-        alignment: AlignmentDirectional.center,
-      ),
-      onPressed: () {},
-      onHighlightChanged: (value){
-        setState(() {
-          doChange = value;
-        });
-      },
-    );
-  }
-}
-
-class BannerCarousal extends StatefulWidget {
-  @override
-  _BannerCarousalState createState() => _BannerCarousalState();
-}
-
-//(WIP) replace default info images with PSO2 tweaker pages 
-List<String> bannerList = [
-  'assets/images/info1.png',
-  'assets/images/info2.png',
-  'assets/images/info3.png',
-  'assets/images/info4.png',
-  'assets/images/info5.png'
-];
-
-class _BannerCarousalState extends State<BannerCarousal> {
-  final CarouselSlider bannerPlay = CarouselSlider(
-    viewportFraction: 1.0,
-    aspectRatio: 2.0,
-    autoPlay: true,
-    enlargeCenterPage: true,
-    items: bannerList.map(
-      (infoPage) {
-          return Container(
-          margin: EdgeInsets.all(5.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            child: Image.asset(
-              infoPage,
-              fit: BoxFit.cover,
-              width: 1000.0,
-            ),
-          ),
-        );
-      },
-    ).toList(),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: bannerPlay
-    );
-  }
-}
