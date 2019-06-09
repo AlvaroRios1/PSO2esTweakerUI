@@ -59,7 +59,7 @@ class _BannerCarousalState extends State<BannerCarousal> {
       viewportFraction: 1.0,
       aspectRatio: 2.0,
       autoPlay: true,
-      enlargeCenterPage: true,
+      enlargeCenterPage: false,
       items: bannerList.map(
         (infoPage) {
             return GestureDetector(
@@ -69,8 +69,9 @@ class _BannerCarousalState extends State<BannerCarousal> {
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   child: Image.asset(
                     infoPage,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.fill,
                     width: 1000.0,
+                    //height: 400.0,
                   ),
                 ),
               ),
