@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+//import 'package:http_parser/http_parser.dart';
 
 import 'package:arks_ui/arks_button.dart';
 import 'package:arks_ui/bgm_module.dart';
@@ -58,7 +60,7 @@ class _MainPageState extends State<MainPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            //BGM(),
+            BGM(),
             Container(
               height: MediaQuery.of(context).size.height / 35
             ),
@@ -74,19 +76,6 @@ class _MainPageState extends State<MainPage> {
 
                 ),
             ),
-            // Container(
-            //   height: MediaQuery.of(context).size.height / 3.3,
-            //   foregroundDecoration: BoxDecoration(
-            //     image: DecorationImage(
-            //       image: AssetImage("assets/images/banner.png"),
-            //       fit: BoxFit.contain
-            //     ),
-            //   ),
-            //   // child: Container(
-            //   //   child: BannerCarousal(),
-            //   //   width: MediaQuery.of(context).size.width / 1.1,
-            //   // )
-            // ),
             Stack(
               children: <Widget>[
                 Container(
@@ -97,14 +86,10 @@ class _MainPageState extends State<MainPage> {
                       fit: BoxFit.contain
                     ),
                   ),
-                  // child: Container(
-                  //   child: BannerCarousal(),
-                  //   width: MediaQuery.of(context).size.width / 1.1,
-                  // )
                 ),
                 Container(
                   child: BannerCarousal(),
-                  width: MediaQuery.of(context).size.width / 1.185,
+                  width: MediaQuery.of(context).size.width / 1.2,
                   height: MediaQuery.of(context).size.height / 3.55,
                 ),
               ],

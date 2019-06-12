@@ -56,7 +56,7 @@ class _BannerCarousalState extends State<BannerCarousal> {
   @override
   Widget build(BuildContext context) {
     CarouselSlider bannerPlay = CarouselSlider(
-      viewportFraction: 1.0,
+      viewportFraction: 1.05,
       aspectRatio: 2.0,
       autoPlay: true,
       enlargeCenterPage: false,
