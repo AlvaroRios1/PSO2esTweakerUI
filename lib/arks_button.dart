@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:arks_ui/bgm_module.dart';
 
 //(WIP) include parameter for function to perform tasks (update client, patch client, start game)
 class ArksButton extends StatefulWidget {
-  ArksButton({@required this.buttonText, @required this.size, @required this.fontSize});
+  ArksButton({@required this.buttonText, @required this.size, @required this.fontSize, @required this.callback});
   final String buttonText;
   final double fontSize;
   final double size;
+  final Function (bool) callback;
   @override
   _ArksButtonState createState() => _ArksButtonState(buttonText: buttonText, size: size, fontSize: fontSize);
 }
@@ -37,6 +39,7 @@ class _ArksButtonState extends State<ArksButton> {
       onHighlightChanged: (value){
         setState(() {
           doChange = value;
+          widget.callback(value);
         });
       },
     );

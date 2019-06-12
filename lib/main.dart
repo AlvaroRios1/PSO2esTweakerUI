@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:http/http.dart';
 //import 'package:http_parser/http_parser.dart';
 
@@ -32,6 +33,10 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  BGM soundController = BGM();
+  void callbackButton(bool change){
+    if(change == true) soundController.playBing();
+  }
   @override
   Widget build(BuildContext context) {
     Padding padThis(Widget kid){
@@ -51,16 +56,16 @@ class _MainPageState extends State<MainPage> {
       );
     }
 
-    ArksButton patch = ArksButton(buttonText: "Apply English Patch", size: 150, fontSize: 15,);
-    ArksButton update = ArksButton(buttonText: "Install Game Update", size: 150, fontSize: 15,);
-    ArksButton start = ArksButton(buttonText: "Start PSO2es", size: 200, fontSize: 20);
+    ArksButton patch = ArksButton(buttonText: "Apply English Patch", size: 150, fontSize: 15, callback: callbackButton,);
+    ArksButton update = ArksButton(buttonText: "Install Game Update", size: 150, fontSize: 15, callback: callbackButton,);
+    ArksButton start = ArksButton(buttonText: "Start PSO2es", size: 200, fontSize: 20, callback: callbackButton,);
 
     return Scaffold(
       body: Container(child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            BGM(),
+            soundController,
             Container(
               height: MediaQuery.of(context).size.height / 35
             ),

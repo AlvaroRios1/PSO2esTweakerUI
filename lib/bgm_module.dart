@@ -4,8 +4,14 @@ import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class BGM extends StatefulWidget {
+  final _BGMState bgm = _BGMState();
+
+  void playBing(){
+    bgm.playBing();
+  }
+
   @override
-  _BGMState createState() => _BGMState();
+  _BGMState createState() => bgm;
 }
 
 class _BGMState extends State<BGM> with WidgetsBindingObserver{
@@ -16,7 +22,7 @@ class _BGMState extends State<BGM> with WidgetsBindingObserver{
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     audioPlayer = AudioCache(prefix: 'audio/');
-    audioPlayer.load('crossing.mp3').whenComplete(() async {
+    audioPlayer.loadAll(['crossing.mp3', 'bing.wav']).whenComplete(() async {
       player = await audioPlayer.loop('crossing.mp3');
     });
   }
@@ -47,6 +53,10 @@ class _BGMState extends State<BGM> with WidgetsBindingObserver{
         player.pause();
         break;
     }
+  }
+
+  void playBing(){
+    audioPlayer.play('bing.wav');
   }
 
   @override
