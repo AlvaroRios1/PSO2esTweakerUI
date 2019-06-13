@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:http/http.dart';
-//import 'package:http_parser/http_parser.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:arks_ui/arks_button.dart';
 import 'package:arks_ui/bgm_module.dart';
 import 'package:arks_ui/banner_module.dart';
+import 'package:arks_ui/helper_functions.dart';
 
 void main() => runApp(MyApp());
 
@@ -34,28 +35,94 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   BGM soundController = BGM();
-  void callbackButton(bool change){
-    if(change == true) soundController.playBing();
+  String target = "http://pso2es.10nub.es/";
+  String apkLink = "";
+  String patchLink = "";
+  String apkVer = "";
+  String patchVer = "";
+  bool verFetchComplete = false;
+  http.Response response;
+  File data;
+  void callbackButton(bool change) async {
+    if(change == true) {
+      soundController.playBing();
+    }
   }
+
+  Future fetchVer() async {
+    response = await http.get(target);
+    data = await localFile;
+    data.writeAsString(response.body);
+    data.readAsLines().then(process);
+  }
+
+  //TODO: WE CAN'T BE SURE THAT THE LINKS WILL BE ON THESE SPECIFIC LINES,
+  //     SO FIND A BETTER WAY TO FEED THROUGH IT.  FOR NOW, ARKS-LAYERS 
+  //     PLEASE NEVER CHANGE UP YOUR HTML DOC A LOT K THNX.
+  //TODO: IF FAIL TO SUCCESSFULLY PROCESS DATA THEN EXIT OUT AND USE CIRCULAR
+  //     LOADING WIDGET IN PLACE OF TEXT
+  //Prints are for debugging purposes
+  Future process(List<String> linesOfHTML) async {
+    int index = 0;
+    String sizeOfApk = "http://pso2es.10nub.es/PSO2es_";
+    String sizeOfPatch = "http://pso2es.10nub.es/patch";
+
+    for (var i in linesOfHTML){
+      //if (index == 69 || index == 70) print(i);
+      if (index == 69) apkLink = i.toString();
+      if (index == 70) patchLink = i.toString();
+      index++;
+    }
+
+    int apkIndex = apkLink.indexOf(sizeOfApk) + sizeOfApk.length;
+    int patchIndex = patchLink.indexOf(sizeOfPatch) + sizeOfPatch.length; 
+    //print(apkIndex);
+    //print(patchIndex);
+
+    int i = apkIndex;
+    int j = patchIndex;
+    while(true){
+      if((apkLink[i] + apkLink[i + 1])== ".a") break;
+      if(i > 75) break; //fail safe in case html doc in PSO2es.nub website ever changes
+      apkVer += apkLink[i];
+      i++;
+    }
+    while(true){
+      if(patchLink[j] == '.') break;
+      if(j > 75) break; //fail safe in case html doc in PSO2es.nub website ever changes
+      patchVer += patchLink[j];
+      j++;
+    }
+
+    apkLink = sizeOfApk + apkVer + ".apk";
+    patchLink = sizeOfPatch +  patchVer + ".zip";
+    //print(apkLink);
+    //print(patchLink);
+    await sleepFetch();
+    setState(() {
+      verFetchComplete = true;
+    });
+    //print(apkVer);
+    //print(patchVer);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    //Fetch from pso2es.nub html document and then process it
+    //TODO: COMPARE STORED VER NUMBERS WITH FETCHED NUMBERS
+    //      NOTIFY USER IF THEY NEED TO UPDATE
+    fetchVer();
+  }
+
+  //TODO: ON DISPOSE STORE VERSION NUMBERS INTO APPLICATION
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Padding padThis(Widget kid){
-      return Padding(
-        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-        child: kid,
-      );
-    }
-
-    Text whiteThis(String text){
-      return Text(
-        text,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 20.0
-        )
-      );
-    }
-
     ArksButton patch = ArksButton(buttonText: "Apply English Patch", size: 150, fontSize: 15, callback: callbackButton,);
     ArksButton update = ArksButton(buttonText: "Install Game Update", size: 150, fontSize: 15, callback: callbackButton,);
     ArksButton start = ArksButton(buttonText: "Start PSO2es", size: 200, fontSize: 20, callback: callbackButton,);
@@ -107,21 +174,21 @@ class _MainPageState extends State<MainPage> {
                 padThis(
                   Row(children: <Widget>[
                     whiteThis('Game Version: '),
-                    CircularProgressIndicator()
+                    verFetchComplete ? whiteThis('$apkVer') : CircularProgressIndicator()
                   ],
                   mainAxisAlignment: MainAxisAlignment.center,
                   )
-
                 ),
+                verFetchComplete ? Container(height: MediaQuery.of(context).size.height * .0155,) : Container(),
                 padThis(
                   Row(children: <Widget>[
                     whiteThis('English Patch Version: '),
-                    CircularProgressIndicator()
+                    verFetchComplete ? whiteThis('$patchVer') : CircularProgressIndicator()
                   ],
                   mainAxisAlignment: MainAxisAlignment.center,
                   )
-
                 ),
+                verFetchComplete ? Container(height: MediaQuery.of(context).size.height * .0155,) : Container(),
                 padThis(Divider(color: Colors.white,)),
                 padThis(patch),
                 padThis(update),
