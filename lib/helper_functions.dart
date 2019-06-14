@@ -6,13 +6,14 @@ import 'package:path_provider/path_provider.dart';
 
 Future<String> get _localPath async {
   final directory = await getApplicationDocumentsDirectory();
-
+  print(directory.path);
   return directory.path;
 }
 
 Future<File> get localFile async {
   final path = await _localPath;
-  return File('$path/counter.txt');
+  File newFile = new File('$path/counter.txt');
+  return newFile;
 }
 
 Padding padThis(Widget kid){

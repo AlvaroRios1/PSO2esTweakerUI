@@ -51,6 +51,7 @@ class _MainPageState extends State<MainPage> {
 
   Future fetchVer() async {
     response = await http.get(target);
+    print(response.body);
     data = await localFile;
     data.writeAsString(response.body);
     data.readAsLines().then(process);
@@ -112,6 +113,7 @@ class _MainPageState extends State<MainPage> {
     //Fetch from pso2es.nub html document and then process it
     //TODO: COMPARE STORED VER NUMBERS WITH FETCHED NUMBERS
     //      NOTIFY USER IF THEY NEED TO UPDATE
+    precacheImage(AssetImage('assets/images/button_press.png'), context);
     fetchVer();
   }
 
